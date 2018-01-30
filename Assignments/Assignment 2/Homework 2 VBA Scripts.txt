@@ -1,0 +1,85 @@
+Sub RESET()
+
+Dim ws As Worksheet
+Dim starting_ws As Worksheet
+Set starting_ws = ActiveSheet 'remember which worksheet is active in the beginning
+
+For Each ws In ThisWorkbook.Worksheets
+    ws.Activate
+   
+        ws.Columns("J:N").Cells.Clear
+Next
+
+starting_ws.Activate 'activate the worksheet that was originally active
+
+End Sub
+
+Sub Ticker_analyze()
+
+Dim ws As Worksheet
+Dim starting_ws As Worksheet
+Dim lr As Double
+Dim ticker As String
+Dim volume_total As Double
+Dim Summary_Table_Row As Integer
+
+Summary_Table_Row = 2
+
+Set starting_ws = ActiveSheet 'remember which worksheet is active in the beginning
+
+'Assigning values
+Range("J1").Value = "Ticker Name"
+Range("K1").Value = "Date Name"
+Range("N1").Value = "Volume"
+
+
+For Each ws In ThisWorkbook.Worksheets
+    ws.Activate
+    
+    lr = ws.Cells(Rows.Count, 1).End(xlUp).Row
+  'Initializing values
+    Summary_Table_Row = 2
+    Volume = 0
+   
+    For i = 2 To lr
+    
+    'Headers for summary Table
+    Range("J1").Value = "Ticker Name"
+    Range("K1").Value = "Volume"
+    
+        If ws.Cells(i + 1, 1).Value <> ws.Cells(i, 1).Value Then
+         
+         'Setting ticker value
+         ticker = Cells(i, 1).Value
+         
+         'Setting Volume data
+         Volume = Volume + Cells(i, 7).Value
+         
+         'Output the value of ticker
+         Range("J" & Summary_Table_Row).Value = ticker
+         
+          'Output the Volume Sum
+         Range("K" & Summary_Table_Row).Value = Volume
+       
+           'incrementing summary_table_row value
+         Summary_Table_Row = Summary_Table_Row + 1
+         
+         'reset volume
+         Volume = 0
+        Else
+        'add to volume
+        Volume = Volume + Cells(i, 7).Value
+              
+
+    End If
+    
+    
+    
+    Next i
+Next
+
+
+
+End Sub
+
+
